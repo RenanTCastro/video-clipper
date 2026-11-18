@@ -88,7 +88,7 @@ Opcional: crie uma pasta `fonts/` com `Montserrat-Black.ttf` (Google Fonts) para
 ### Problemas comuns
 
 - **`Connection error` / `ECONNREFUSED` na transcrição**: o Whisper local não está rodando (`./start-whisper.sh` no Mac, `start-whisper.bat` no Windows) — ou troque `TRANSCRIBE_PROVIDER` para `groq`.
-- **"Seu ffmpeg não tem suporte a legendas"**: instale o `ffmpeg-full` (passo 1).
+- **"Seu ffmpeg não tem suporte a legendas"**: instale o ffmpeg completo (passo 1: `ffmpeg-full` no Mac, `Gyan.FFmpeg` no Windows).
 - **`Já existe um trabalho em andamento`**: só roda um processo por vez; use o botão **Cancelar** ou espere terminar.
 - **Porta 3000 ocupada**: `PORT=3100 npm run web` (Windows PowerShell: `$env:PORT=3100; npm run web`).
 - **YouTube pede login**: ponha `YTDLP_ARGS=--cookies-from-browser chrome` no `.env`.
