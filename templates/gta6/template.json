@@ -1,0 +1,24 @@
+{
+  "name": "GTA VI",
+  "overlay": "overlay.png",
+  "video": {
+    "x": 19,
+    "y": 686,
+    "w": 1042,
+    "h": 576
+  },
+  "title": {
+    "y": 480,
+    "maxChars": 17,
+    "sizes": [
+      110,
+      92,
+      76
+    ]
+  },
+  "caption": {
+    "y": 1405,
+    "size": 104,
+    "maxChars": 17
+  }
+}

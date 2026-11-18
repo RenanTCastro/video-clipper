@@ -1,0 +1,24 @@
+{
+  "name": "ARC Raiders",
+  "overlay": "overlay.png",
+  "video": {
+    "x": 28,
+    "y": 694,
+    "w": 1024,
+    "h": 557
+  },
+  "title": {
+    "y": 478,
+    "maxChars": 17,
+    "sizes": [
+      110,
+      92,
+      76
+    ]
+  },
+  "caption": {
+    "y": 1406,
+    "size": 104,
+    "maxChars": 17
+  }
+}
