@@ -42,8 +42,10 @@ export async function checkDeps() {
   if (!/^\s*\S*\s+ass\s/m.test(filters)) {
     throw new Error(
       'Seu ffmpeg não tem suporte a legendas (libass).\n' +
-        'No Mac: brew uninstall ffmpeg && brew install ffmpeg-full\n' +
-        '(se o ffmpeg-full não estiver no PATH, rode: brew link --overwrite ffmpeg-full)'
+        (process.platform === 'win32'
+          ? 'No Windows: winget uninstall ffmpeg ; winget install Gyan.FFmpeg (build "full" do gyan.dev)'
+          : 'No Mac: brew uninstall ffmpeg && brew install ffmpeg-full\n' +
+            '(se o ffmpeg-full não estiver no PATH, rode: brew link --overwrite ffmpeg-full)')
     );
   }
 }

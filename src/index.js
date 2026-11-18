@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import 'dotenv/config';
 import { parseArgs } from 'node:util';
+import { missingKeys } from './config.js';
 import { checkDeps, log, fmtTime } from './utils.js';
 import { analyzeVod, renderJob, saveJob, vodIdFromUrl } from './pipeline.js';
 
@@ -53,11 +54,9 @@ if (opt.help || !url) {
 if (!vodIdFromUrl(url)) {
   console.warn('⚠ O link não parece um vídeo da Twitch (twitch.tv/videos/123...) nem do YouTube. Tentando mesmo assim.');
 }
-for (const k of ['ANTHROPIC_API_KEY', 'TRANSCRIBE_API_KEY']) {
-  if (!process.env[k]) {
-    console.error(`Falta ${k} no arquivo .env (veja .env.example)`);
-    process.exit(1);
-  }
+for (const k of missingKeys()) {
+  console.error(`Falta ${k} no arquivo .env (veja .env.example)`);
+  process.exit(1);
 }
 
 async function main() {

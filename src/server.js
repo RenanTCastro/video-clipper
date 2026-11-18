@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { missingKeys } from './config.js';
 import 'dotenv/config';
 import http from 'node:http';
 import fs from 'node:fs';
@@ -83,7 +84,7 @@ async function handle(req, res) {
   }
 
   if (req.method === 'GET' && p === '/api/status') {
-    const missing = ['ANTHROPIC_API_KEY', 'TRANSCRIBE_API_KEY'].filter((k) => !process.env[k]);
+    const missing = missingKeys();
     return send(res, 200, { missing, busy: active ? { id: active.id, kind: active.kind } : null });
   }
 
@@ -110,7 +111,7 @@ async function handle(req, res) {
     const id = vodIdFromUrl(body.url);
     if (!id) return send(res, 400, { error: 'Link inválido. Use um VOD da Twitch (twitch.tv/videos/123...) ou um vídeo do YouTube (youtube.com/watch?v=... ou youtu.be/...).' });
     if (active) return send(res, 409, { error: 'Já existe um trabalho em andamento. Aguarde terminar.' });
-    const missing = ['ANTHROPIC_API_KEY', 'TRANSCRIBE_API_KEY'].filter((k) => !process.env[k]);
+    const missing = missingKeys();
     if (missing.length) return send(res, 400, { error: `Falta ${missing.join(', ')} no arquivo .env` });
     startTask(id, 'analyze', async () => {
       await checkDeps();

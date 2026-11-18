@@ -6,6 +6,7 @@ import { Agent, setGlobalDispatcher } from 'undici';
 // Whisper local pode levar vários minutos por pedaço: tira o limite de espera (padrão do Node: 5 min)
 setGlobalDispatcher(new Agent({ headersTimeout: 0, bodyTimeout: 0, connectTimeout: 30_000 }));
 import { run, log, fmtTime, checkCancel } from './utils.js';
+import { transcribeConfig } from './config.js';
 
 const CHUNK_SECONDS = 600; // 10 min por pedaço → ~5MB em mp3 32kbps (limite da API é 25MB)
 
@@ -14,20 +15,22 @@ const CHUNK_SECONDS = 600; // 10 min por pedaço → ~5MB em mp3 32kbps (limite 
  * Divide em pedaços, transcreve em paralelo (limitado) e junta tudo.
  * Resultado fica em cache em transcript.json.
  */
-export async function transcribe(audioFile, workDir, { duration, language, concurrency = Number(process.env.TRANSCRIBE_CONCURRENCY) || 4 }) {
+export async function transcribe(audioFile, workDir, { duration, language, concurrency = transcribeConfig().concurrency }) {
   const cache = path.join(workDir, 'transcript.json');
   if (fs.existsSync(cache)) {
     log('Usando transcrição em cache');
     return JSON.parse(fs.readFileSync(cache, 'utf8'));
   }
 
+  const cfg = transcribeConfig();
+  log(`Transcrevendo com: ${cfg.provider}${cfg.provider === 'local' ? ' (whisper.cpp local)' : ''}`);
   const client = new OpenAI({
-    apiKey: process.env.TRANSCRIBE_API_KEY,
-    baseURL: process.env.TRANSCRIBE_BASE_URL || 'https://api.openai.com/v1',
+    apiKey: cfg.apiKey,
+    baseURL: cfg.baseURL,
     timeout: 60 * 60 * 1000,
     maxRetries: 0, // as tentativas são feitas por withRetry (abaixo)
   });
-  const model = process.env.TRANSCRIBE_MODEL || 'whisper-1';
+  const model = cfg.model;
 
   const chunkDir = path.join(workDir, 'chunks');
   fs.mkdirSync(chunkDir, { recursive: true });
